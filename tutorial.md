@@ -5,7 +5,7 @@
 ### O script
 
 ```bash
-wget --output-document=setup.sh link
+wget --output-document=setup.sh https://raw.githubusercontent.com/rg3915/djangosimples/master/setup.sh
 source setup.sh myproject
 ```
 
