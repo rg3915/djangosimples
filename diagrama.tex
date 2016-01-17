@@ -1,0 +1,36 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,backgrounds}
+
+\begin{document}
+
+\tikzstyle{box}=[draw, minimum width=2cm, minimum height=1cm, node distance=1.5cm, rounded corners]
+
+\begin{tikzpicture}
+    \node[box,fill=blue!25] (a) {Admin};
+    \node[box,fill=yellow!50] (v) [right = of a] {Views};
+    \node[box,fill=orange!50] (u) [right = of v] {Urls};
+    \node[box,fill=green!40] (m) [above = of v.north west] {Models};
+    \node[box,fill=cyan!50] (f) [right = of m] {Forms};
+    \node[box,fill=green!25] (t) [below = of u] {Templates};
+    \node[box,fill=green!25] (i) [below = of t, yshift=.7cm] {index.html};
+    \node (tdd) [below = of a,yshift=-2.5cm] {Tests};
+    \node[box,fill=gray!25] [left = of tdd] {Settings};
+    \draw(v) to[out=0, in=170] (u);
+    \draw(v) to[out=90, in=-90] (m);
+    \draw(v) to[out=90, in=-90] (f);
+    \draw(m) to[out=0, in=180] (f);
+    \draw[dashed](v) to[out=-90, in=90] (t);
+    \draw(u) to[out=-100, in=80] (t);
+    \draw(t) to[out=-90, in=90] (i);
+    \draw(a) to[out=0, in=180] (m);
+    \draw(a) to[out=10, in=180] (v);
+    \draw(a) to[out=-20, in=215] (u);
+
+    \begin{pgfonlayer}{background}
+        \node [draw,rounded corners,fill=teal!20,fit=(a) (m) (u) (i)] {};
+    \end{pgfonlayer}
+
+\end{tikzpicture}
+
+\end{document}
