@@ -36,7 +36,7 @@ sleep 2
 
 # installdjango
 echo "${green}>>> Installing the Django${reset}"
-pip install django selenium names rstr
+pip install django selenium names
 pip freeze > requirements.txt
 
 # createproject
@@ -160,7 +160,8 @@ echo "${green}>>> Creating Selenium${reset}"
 sleep 1
 
 echo "import names" > selenium/selenium_person.py
-echo "import rstr" >> selenium/selenium_person.py
+echo "import random" >> selenium/selenium_person.py
+echo "import string" >> selenium/selenium_person.py
 echo "import time" >> selenium/selenium_person.py
 echo "from selenium import webdriver" >> selenium/selenium_person.py
 echo "from selenium.webdriver.common.keys import Keys" >> selenium/selenium_person.py
@@ -173,11 +174,8 @@ echo "email = '{}.{}@example.com'.format(first_name[0].lower(), last_name.lower(
 echo "" >> selenium/selenium_person.py
 echo "" >> selenium/selenium_person.py
 echo "def gen_phone():" >> selenium/selenium_person.py
-echo "    # gera um telefone no formato xx xxxx-xxxx" >> selenium/selenium_person.py
-echo "    return '{0} {1}-{2}'.format(" >> selenium/selenium_person.py
-echo "        rstr.rstr('1234567890', 2)," >> selenium/selenium_person.py
-echo "        rstr.rstr('1234567890', 4)," >> selenium/selenium_person.py
-echo "        rstr.rstr('1234567890', 4))" >> selenium/selenium_person.py
+echo "    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))" >> selenium/selenium_person.py
+echo "    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])" >> selenium/selenium_person.py
 echo "" >> selenium/selenium_person.py
 echo "" >> selenium/selenium_person.py
 echo "page = webdriver.Firefox()" >> selenium/selenium_person.py
@@ -235,16 +233,14 @@ echo "${green}>>> Creating initdata...${reset}"
 sleep 1
 
 echo "import names" >> initdata.py
-echo "import rstr" >> initdata.py
+echo "import random" >> initdata.py
+echo "import string" >> initdata.py
 echo "from $PROJECT.core.models import Person" >> initdata.py
 echo "" >> initdata.py
 echo "" >> initdata.py
 echo "def gen_phone():" >> initdata.py
-echo "    # gera um telefone no formato xx xxxx-xxxx" >> initdata.py
-echo "    return '{0} {1}-{2}'.format(" >> initdata.py
-echo "        rstr.rstr('1234567890', 2)," >> initdata.py
-echo "        rstr.rstr('1234567890', 4)," >> initdata.py
-echo "        rstr.rstr('1234567890', 4))" >> initdata.py
+echo "    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))" >> initdata.py
+echo "    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])" >> initdata.py
 echo "" >> initdata.py
 echo "REPEAT = 10" >> initdata.py
 echo "" >> initdata.py
