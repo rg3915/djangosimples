@@ -58,20 +58,22 @@ mkdir -p core/templates
 sleep 1
 echo "${green}>>> Creating index.html.${reset}"
 
-echo "<html>" > core/templates/index.html
-echo "  <head>" >> core/templates/index.html
-echo '    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">' >> core/templates/index.html
-echo "  </head>" >> core/templates/index.html
-echo "  <body>" >> core/templates/index.html
-echo '    <div class="container">' >> core/templates/index.html
-echo '      <div class="jumbotron">' >> core/templates/index.html
-echo "        <h1>Tutorial Django</h1>" >> core/templates/index.html
-echo "        <h3>Bem vindo ao Grupy-SP</h3>" >> core/templates/index.html
-echo "        <p></p>" >> core/templates/index.html
-echo "      </div>" >> core/templates/index.html
-echo "    </div>" >> core/templates/index.html
-echo "  </body>" >> core/templates/index.html
-echo "</html>" >> core/templates/index.html
+cat << EOF > core/templates/index.html
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Tutorial Django</h1>
+        <h3>Bem vindo ao Grupy-SP</h3>
+        <p></p>
+      </div>
+    </div>
+  </body>
+</html>
+EOF
 
 # up one level
 cd ..
@@ -114,39 +116,44 @@ echo "    return render(request, 'index.html')" >> $PROJECT/core/views.py
 echo "${green}>>> Editing models.py${reset}"
 sleep 1
 
-echo "from django.db import models" > $PROJECT/core/models.py
-echo "" >> $PROJECT/core/models.py
-echo "" >> $PROJECT/core/models.py
-echo "class Person(models.Model):" >> $PROJECT/core/models.py
-echo "    first_name = models.CharField('nome', max_length=50)" >> $PROJECT/core/models.py
-echo "    last_name = models.CharField('sobrenome', max_length=50)" >> $PROJECT/core/models.py
-echo "    phone = models.CharField('telefone', max_length=20, blank=True)" >> $PROJECT/core/models.py
-echo "    email = models.EmailField('e-mail', blank=True)" >> $PROJECT/core/models.py
-echo "    blocked = models.BooleanField('bloqueado', default=False)" >> $PROJECT/core/models.py
-echo "    created = models.DateTimeField('criado em', auto_now_add=True)" >> $PROJECT/core/models.py
-echo "" >> $PROJECT/core/models.py
-echo "    class Meta:" >> $PROJECT/core/models.py
-echo "        ordering = ['first_name']" >> $PROJECT/core/models.py
-echo "        verbose_name = 'pessoa'" >> $PROJECT/core/models.py
-echo "        verbose_name_plural = 'pessoas'" >> $PROJECT/core/models.py
-echo "" >> $PROJECT/core/models.py
-echo "    def __str__(self):" >> $PROJECT/core/models.py
-echo "        return ' '.join(filter(None, [self.first_name, self.last_name]))" >> $PROJECT/core/models.py
+cat << EOF > $PROJECT/core/models.py
+from django.db import models
+
+
+class Person(models.Model):
+    first_name = models.CharField('nome', max_length=50)
+    last_name = models.CharField('sobrenome', max_length=50)
+    phone = models.CharField('telefone', max_length=20, blank=True)
+    email = models.EmailField('e-mail', blank=True)
+    blocked = models.BooleanField('bloqueado', default=False)
+    created = models.DateTimeField('criado em', auto_now_add=True)
+
+    class Meta:
+        ordering = ['first_name']
+        verbose_name = 'pessoa'
+        verbose_name_plural = 'pessoas'
+
+    def __str__(self):
+        return ' '.join(filter(None, [self.first_name, self.last_name]))
+EOF
 
 echo "${green}>>> Editing admin.py${reset}"
 sleep 1
 
-echo "from django.contrib import admin" > $PROJECT/core/admin.py
-echo "from $PROJECT.core.models import Person" >> $PROJECT/core/admin.py
-echo "" >> $PROJECT/core/admin.py
-echo "" >> $PROJECT/core/admin.py
-echo "class PersonModelAdmin(admin.ModelAdmin):" >> $PROJECT/core/admin.py
-echo "    list_display = ('__str__', 'phone', 'email', 'created', 'blocked')" >> $PROJECT/core/admin.py
-echo "    search_fields = ('first_name', 'last_name', 'phone', 'email', 'blocked')" >> $PROJECT/core/admin.py
-echo "    list_filter = ('blocked',)" >> $PROJECT/core/admin.py
-echo "" >> $PROJECT/core/admin.py
-echo "" >> $PROJECT/core/admin.py
-echo "admin.site.register(Person, PersonModelAdmin)" >> $PROJECT/core/admin.py
+cat << EOF > $PROJECT/core/admin.py
+from django.contrib import admin
+from $PROJECT.core.models import Person
+
+
+class PersonModelAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'phone', 'email', 'created', 'blocked')
+    search_fields = ('first_name', 'last_name', 'phone', 'email', 'blocked')
+    list_filter = ('blocked',)
+
+
+admin.site.register(Person, PersonModelAdmin)
+EOF
+
 # ********** END OF THE MAGIC **********
 
 # migrate
@@ -159,53 +166,56 @@ mkdir selenium
 echo "${green}>>> Creating Selenium${reset}"
 sleep 1
 
-echo "import names" > selenium/selenium_person.py
-echo "import random" >> selenium/selenium_person.py
-echo "import string" >> selenium/selenium_person.py
-echo "import time" >> selenium/selenium_person.py
-echo "from selenium import webdriver" >> selenium/selenium_person.py
-echo "from selenium.webdriver.common.keys import Keys" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "first_name = names.get_first_name()" >> selenium/selenium_person.py
-echo "last_name = names.get_last_name()" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "email = '{}.{}@example.com'.format(first_name[0].lower(), last_name.lower())" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "def gen_phone():" >> selenium/selenium_person.py
-echo "    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))" >> selenium/selenium_person.py
-echo "    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "page = webdriver.Firefox()" >> selenium/selenium_person.py
-echo "page.get('http://localhost:8000/admin/core/person/add/')" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "search = page.find_element_by_id('id_username')" >> selenium/selenium_person.py
-echo "search.send_keys('admin')" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "search = page.find_element_by_id('id_password')" >> selenium/selenium_person.py
-echo "search.send_keys('demodemo')" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo 'button = page.find_element_by_xpath("//input[@type=&submit&]")' >> selenium/selenium_person.py
-echo "button.click()" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "fields = [['id_first_name', first_name]," >> selenium/selenium_person.py
-echo "          ['id_last_name', last_name]," >> selenium/selenium_person.py
-echo "          ['id_phone', gen_phone()]," >> selenium/selenium_person.py
-echo "          ['id_email', email]]" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "for field in fields:" >> selenium/selenium_person.py
-echo "    search = page.find_element_by_id(field[0])" >> selenium/selenium_person.py
-echo "    search.send_keys(field[1])" >> selenium/selenium_person.py
-echo "    time.sleep(0.5)" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo 'button = page.find_element_by_xpath("//input[@type=&submit&]")' >> selenium/selenium_person.py
-echo "button.click()" >> selenium/selenium_person.py
-echo "" >> selenium/selenium_person.py
-echo "page.quit()" >> selenium/selenium_person.py
+cat << EOF > selenium/selenium_person.py
+import names
+import random
+import string
+import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+
+first_name = names.get_first_name()
+last_name = names.get_last_name()
+
+email = '{}.{}@example.com'.format(first_name[0].lower(), last_name.lower())
+
+
+def gen_phone():
+    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))
+    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])
+
+
+page = webdriver.Firefox()
+page.get('http://localhost:8000/admin/core/person/add/')
+
+search = page.find_element_by_id('id_username')
+search.send_keys('admin')
+
+search = page.find_element_by_id('id_password')
+search.send_keys('demodemo')
+
+button = page.find_element_by_xpath("//input[@type='submit']")
+button.click()
+
+fields = [['id_first_name', first_name],
+          ['id_last_name', last_name],
+          ['id_phone', gen_phone()],
+          ['id_email', email]]
+
+for field in fields:
+    search = page.find_element_by_id(field[0])
+    search.send_keys(field[1])
+    time.sleep(0.5)
+
+button = page.find_element_by_xpath("//input[@type='submit']")
+button.click()
+
+page.quit()
+EOF
+
 # Replace &
-sed -i "s/&/'/g" selenium/selenium_person.py
+# sed -i "s/&/'/g" selenium/selenium_person.py
 
 
 # Creating Makefile
@@ -213,18 +223,21 @@ sed -i "s/&/'/g" selenium/selenium_person.py
 echo "${green}>>> Creating Makefile${reset}"
 sleep 1
 
-echo "migrate:" > Makefile
-echo "\tpython manage.py makemigrations" >> Makefile
-echo "\tpython manage.py migrate" >> Makefile
-echo "" >> Makefile
-echo "selenium_person:" >> Makefile
-echo "\tpython selenium/selenium_person.py" >> Makefile
-echo "" >> Makefile
-echo "backup:" >> Makefile
-echo "\tpython manage.py dumpdata core --format=json --indent=2 > fixtures.json" >> Makefile
-echo "" >> Makefile
-echo "initdata:" >> Makefile
-echo "\tpython manage.py shell < initdata.py" >> Makefile
+cat << EOF > Makefile
+migrate:
+\tpython manage.py makemigrations
+\tpython manage.py migrate
+
+selenium_person:
+\tpython selenium/selenium_person.py
+
+backup:
+\tpython manage.py dumpdata core --format=json --indent=2 > fixtures.json
+
+initdata:
+\tpython manage.py shell < initdata.py
+EOF
+
 # Replace \t
 sed -i "s/\\\t/\t/g" Makefile
 
@@ -232,31 +245,33 @@ sed -i "s/\\\t/\t/g" Makefile
 echo "${green}>>> Creating initdata...${reset}"
 sleep 1
 
-echo "import names" >> initdata.py
-echo "import random" >> initdata.py
-echo "import string" >> initdata.py
-echo "from $PROJECT.core.models import Person" >> initdata.py
-echo "" >> initdata.py
-echo "" >> initdata.py
-echo "def gen_phone():" >> initdata.py
-echo "    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))" >> initdata.py
-echo "    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])" >> initdata.py
-echo "" >> initdata.py
-echo "REPEAT = 10" >> initdata.py
-echo "" >> initdata.py
-echo "for i in range(REPEAT):" >> initdata.py
-echo "    first_name = names.get_first_name()" >> initdata.py
-echo "    last_name = names.get_last_name()" >> initdata.py
-echo "    email = '{}.{}@example.com'.format(" >> initdata.py
-echo "        first_name[0].lower(), last_name.lower())" >> initdata.py
-echo "    obj = Person.objects.create(" >> initdata.py
-echo "        first_name=first_name," >> initdata.py
-echo "        last_name=last_name," >> initdata.py
-echo "        phone=gen_phone()," >> initdata.py
-echo "        email=email)" >> initdata.py
-echo "" >> initdata.py
-echo "" >> initdata.py
-echo "# done" >> initdata.py
+cat << EOF > initdata.py
+import names
+import random
+import string
+from $PROJECT.core.models import Person
+
+
+def gen_phone():
+    digits_ = str(''.join(random.choice(string.digits) for i in range(11)))
+    return '{} 9{}-{}'.format(digits_[:2], digits_[3:7], digits_[7:])
+
+REPEAT = 10
+
+for i in range(REPEAT):
+    first_name = names.get_first_name()
+    last_name = names.get_last_name()
+    email = '{}.{}@example.com'.format(
+        first_name[0].lower(), last_name.lower())
+    obj = Person.objects.create(
+        first_name=first_name,
+        last_name=last_name,
+        phone=gen_phone(),
+        email=email)
+
+
+# done
+EOF
 
 python manage.py shell < initdata.py
 echo "${green}>>> Dump data...${reset}"
